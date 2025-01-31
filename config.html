@@ -15,7 +15,7 @@
             let pneuValor = parseFloat(document.getElementById("pneu_valor").value) || 0;
             let pneuQtd = parseFloat(document.getElementById("pneu_qtd").value) || 1;
             let pneuKm = parseFloat(document.getElementById("pneu_km").value) || 1;
-            let pneu = (pneuValor / pneuQtd) * pneuKm;
+            let pneu = (pneuValor / pneuKm) * pneuQtd;
             document.getElementById("pneu").value = pneu.toFixed(2);
 
             let ipvaValor = parseFloat(document.getElementById("ipva_valor").value) || 0;
@@ -45,40 +45,48 @@
     </header>
     <main>
         <form id="configForm" oninput="calcularValores()">
-            <div>
-                <label for="ipva_valor"><strong>Seguro, IPVA e Licença (Valor R$):</strong></label>
-                <input type="number" id="ipva_valor" step="0.01" value="0.00">
-                <label for="ipva_dias"><strong>Dias:</strong></label>
-                <input type="number" id="ipva_dias" step="1" value="1">
-                <input type="number" id="ipva" step="0.01" value="0.00" readonly>
-            </div>
-
-            <div>
-                <label for="hora_motorista"><strong>Valor Hora Motorista (R$):</strong></label>
-                <input type="number" id="hora_motorista" step="0.01" value="0.00">
-            </div>
-
-            <div>
-                <label for="combustivel"><strong>Combustível (R$):</strong></label>
+            <div class="box">
+                <h2>Combustível</h2>
+                <label for="combustivel"><strong>Valor (R$):</strong></label>
                 <input type="number" id="combustivel" step="0.01" value="0.00">
             </div>
 
-            <div>
-                <label for="pneu_valor"><strong>Pneu (Valor R$):</strong></label>
+            <div class="box">
+                <h2>Troca de Óleo</h2>
+                <label for="troca_valor"><strong>Valor (R$):</strong></label>
+                <input type="number" id="troca_valor" step="0.01" value="0.00">
+                <label for="troca_km"><strong>Quilometragem:</strong></label>
+                <input type="number" id="troca_km" step="1" value="1">
+                <label><strong>Resultado:</strong></label>
+                <input type="number" id="troca_oleo" step="0.01" value="0.00" readonly>
+            </div>
+
+            <div class="box">
+                <h2>Pneu</h2>
+                <label for="pneu_valor"><strong>Valor (R$):</strong></label>
                 <input type="number" id="pneu_valor" step="0.01" value="0.00">
                 <label for="pneu_qtd"><strong>Quantidade:</strong></label>
                 <input type="number" id="pneu_qtd" step="1" value="1">
                 <label for="pneu_km"><strong>Quilometragem:</strong></label>
                 <input type="number" id="pneu_km" step="1" value="1">
+                <label><strong>Resultado:</strong></label>
                 <input type="number" id="pneu" step="0.01" value="0.00" readonly>
             </div>
 
-            <div>
-                <label for="troca_valor"><strong>Troca de Óleo (Valor R$):</strong></label>
-                <input type="number" id="troca_valor" step="0.01" value="0.00">
-                <label for="troca_km"><strong>Quilometragem:</strong></label>
-                <input type="number" id="troca_km" step="1" value="1">
-                <input type="number" id="troca_oleo" step="0.01" value="0.00" readonly>
+            <div class="box">
+                <h2>Seguro, Licença e IPVA</h2>
+                <label for="ipva_valor"><strong>Valor (R$):</strong></label>
+                <input type="number" id="ipva_valor" step="0.01" value="0.00">
+                <label for="ipva_dias"><strong>Dias:</strong></label>
+                <input type="number" id="ipva_dias" step="1" value="1">
+                <label><strong>Resultado:</strong></label>
+                <input type="number" id="ipva" step="0.01" value="0.00" readonly>
+            </div>
+
+            <div class="box">
+                <h2>Motorista</h2>
+                <label for="hora_motorista"><strong>Valor Hora (R$):</strong></label>
+                <input type="number" id="hora_motorista" step="0.01" value="0.00">
             </div>
 
             <button type="button" onclick="salvarConfiguracao()">Salvar</button>
