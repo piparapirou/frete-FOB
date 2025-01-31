@@ -5,6 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custos com Frete</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        function calcularKM() {
+            let kmPercorrido = parseFloat(document.getElementById("km").value) || 0;
+            let combustivel = parseFloat(localStorage.getItem("combustivel")) || 0;
+            let pneu = parseFloat(localStorage.getItem("pneu")) || 0;
+            let trocaOleo = parseFloat(localStorage.getItem("troca_oleo")) || 0;
+            let custoKM = kmPercorrido * (combustivel + pneu + trocaOleo);
+            document.getElementById("km_valor").innerText = custoKM.toFixed(2);
+            calcularTotal();
+        }
+        
+        function calcularTotal() {
+            let km = parseFloat(document.getElementById("km_valor").innerText) || 0;
+            let tempo = parseFloat(document.getElementById("tempo").value) || 0;
+            let pedagio = parseFloat(document.getElementById("pedagio").value) || 0;
+            let almoco = parseFloat(document.getElementById("almoco").value) || 0;
+            let custosFixos = parseFloat(localStorage.getItem("custos_fixos")) || 0;
+            let total = km + tempo + pedagio + almoco + custosFixos;
+            document.getElementById("total").innerText = total.toFixed(2);
+        }
+        
+        function salvarHistorico() {
+            let historico = JSON.parse(localStorage.getItem("historico_frete")) || [];
+            let dados = {
+                data: document.getElementById("data").value,
+                motorista: document.getElementById("motorista").value,
+                destino: document.getElementById("destino").value,
+                custoTotal: document.getElementById("total").innerText
+            };
+            historico.push(dados);
+            localStorage.setItem("historico_frete", JSON.stringify(historico));
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -13,9 +46,9 @@
     <main>
         <section>
             <h2>Custo com Frete</h2>
-            <p><strong>Data:</strong> <span id="data">2023-06-27</span></p>
-            <p><strong>Motorista:</strong> <span id="motorista">EDSON</span></p>
-            <p><strong>Destino:</strong> <span id="destino">SOROCABA</span></p>
+            <label><strong>Data:</strong> <input type="text" id="data" maxlength="50" value=""></label>
+            <label><strong>Motorista:</strong> <input type="text" id="motorista" maxlength="50" value=""></label>
+            <label><strong>Destino:</strong> <input type="text" id="destino" maxlength="50" value=""></label>
             
             <table>
                 <tr>
@@ -24,59 +57,29 @@
                 </tr>
                 <tr>
                     <td>KM</td>
-                    <td>R$ <span id="km">894.00</span></td>
+                    <td>R$ <span id="km_valor">0.00</span></td>
                 </tr>
                 <tr>
                     <td>Tempo</td>
-                    <td>R$ <span id="tempo">105.00</span></td>
+                    <td><input type="number" id="tempo" step="0.01" value="0.00" oninput="calcularTotal()"></td>
                 </tr>
                 <tr>
                     <td>Pedágio</td>
-                    <td>R$ <span id="pedagio">280.80</span></td>
-                </tr>
-                <tr>
-                    <td>Seguro Veículo</td>
-                    <td>R$ <span id="seguro">119.18</span></td>
-                </tr>
-                <tr>
-                    <td>Depreciação</td>
-                    <td>R$ <span id="depreciacao">139.90</span></td>
+                    <td><input type="number" id="pedagio" step="0.01" value="0.00" oninput="calcularTotal()"></td>
                 </tr>
                 <tr>
                     <td>Almoço</td>
-                    <td>R$ <span id="almoco">0.00</span></td>
-                </tr>
-                <tr>
-                    <td>Quantidade de Fretes do Dia</td>
-                    <td><span id="fretes">1</span></td>
-                </tr>
-                <tr>
-                    <td>Seguro, IPVA e Licença</td>
-                    <td>R$ <span id="ipva">0.00</span></td>
-                </tr>
-                <tr>
-                    <td>Hora Motorista</td>
-                    <td>R$ <span id="hora_motorista">0.00</span></td>
-                </tr>
-                <tr>
-                    <td>Combustível</td>
-                    <td>R$ <span id="combustivel">0.00</span></td>
-                </tr>
-                <tr>
-                    <td>Pneu</td>
-                    <td>R$ <span id="pneu">0.00</span></td>
-                </tr>
-                <tr>
-                    <td>Troca de Óleo</td>
-                    <td>R$ <span id="troca_oleo">0.00</span></td>
+                    <td><input type="number" id="almoco" step="0.01" value="0.00" oninput="calcularTotal()"></td>
                 </tr>
                 <tr>
                     <th>Custo Total do Frete</th>
-                    <th>R$ <span id="total">1538.88</span></th>
+                    <th>R$ <span id="total">0.00</span></th>
                 </tr>
             </table>
+            <button onclick="salvarHistorico()">Salvar Histórico</button>
         </section>
         <a href="config.html">Configurar Valores</a>
     </main>
 </body>
 </html>
+
