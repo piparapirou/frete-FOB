@@ -3,82 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custos com Frete</title>
+    <title>Configuração de Valores</title>
     <link rel="stylesheet" href="styles.css">
     <script>
-        function calcularKM() {
-            let kmPercorrido = parseFloat(document.getElementById("km").value) || 0;
-            let combustivel = parseFloat(localStorage.getItem("combustivel")) || 0;
-            let pneu = parseFloat(localStorage.getItem("pneu")) || 0;
-            let trocaOleo = parseFloat(localStorage.getItem("troca_oleo")) || 0;
-            let custoKM = kmPercorrido * (combustivel + pneu + trocaOleo);
-            document.getElementById("km_valor").innerText = custoKM.toFixed(2);
-            calcularTotal();
-        }
-        
-        function calcularTotal() {
-            let km = parseFloat(document.getElementById("km_valor").innerText) || 0;
-            let tempo = parseFloat(document.getElementById("tempo").value) || 0;
-            let pedagio = parseFloat(document.getElementById("pedagio").value) || 0;
-            let almoco = parseFloat(document.getElementById("almoco").value) || 0;
-            let custosFixos = parseFloat(localStorage.getItem("custos_fixos")) || 0;
-            let total = km + tempo + pedagio + almoco + custosFixos;
-            document.getElementById("total").innerText = total.toFixed(2);
-        }
-        
-        function salvarHistorico() {
-            let historico = JSON.parse(localStorage.getItem("historico_frete")) || [];
-            let dados = {
-                data: document.getElementById("data").value,
-                motorista: document.getElementById("motorista").value,
-                destino: document.getElementById("destino").value,
-                custoTotal: document.getElementById("total").innerText
-            };
-            historico.push(dados);
-            localStorage.setItem("historico_frete", JSON.stringify(historico));
+        function salvarConfiguracao() {
+            let custosFixos = parseFloat(document.getElementById("ipva").value) +
+                              parseFloat(document.getElementById("hora_motorista").value) +
+                              parseFloat(document.getElementById("combustivel").value) +
+                              parseFloat(document.getElementById("pneu").value) +
+                              parseFloat(document.getElementById("troca_oleo").value);
+            
+            localStorage.setItem("combustivel", document.getElementById("combustivel").value);
+            localStorage.setItem("pneu", document.getElementById("pneu").value);
+            localStorage.setItem("troca_oleo", document.getElementById("troca_oleo").value);
+            localStorage.setItem("custos_fixos", custosFixos);
+            alert("Configuração salva com sucesso!");
         }
     </script>
 </head>
 <body>
     <header>
-        <h1>Custos com Frete</h1>
+        <h1>Configuração de Valores</h1>
     </header>
     <main>
-        <section>
-            <h2>Custo com Frete</h2>
-            <label><strong>Data:</strong> <input type="text" id="data" maxlength="50" value=""></label>
-            <label><strong>Motorista:</strong> <input type="text" id="motorista" maxlength="50" value=""></label>
-            <label><strong>Destino:</strong> <input type="text" id="destino" maxlength="50" value=""></label>
-            
-            <table>
-                <tr>
-                    <th>Descrição</th>
-                    <th>Valor</th>
-                </tr>
-                <tr>
-                    <td>KM</td>
-                    <td>R$ <span id="km_valor">0.00</span></td>
-                </tr>
-                <tr>
-                    <td>Tempo</td>
-                    <td><input type="number" id="tempo" step="0.01" value="0.00" oninput="calcularTotal()"></td>
-                </tr>
-                <tr>
-                    <td>Pedágio</td>
-                    <td><input type="number" id="pedagio" step="0.01" value="0.00" oninput="calcularTotal()"></td>
-                </tr>
-                <tr>
-                    <td>Almoço</td>
-                    <td><input type="number" id="almoco" step="0.01" value="0.00" oninput="calcularTotal()"></td>
-                </tr>
-                <tr>
-                    <th>Custo Total do Frete</th>
-                    <th>R$ <span id="total">0.00</span></th>
-                </tr>
-            </table>
-            <button onclick="salvarHistorico()">Salvar Histórico</button>
-        </section>
-        <a href="config.html">Configurar Valores</a>
+        <form id="configForm">
+            <label for="ipva"><strong>Seguro, IPVA e Licença:</strong></label>
+            <input type="number" id="ipva" name="ipva" step="0.01" value="0.00">
+
+            <label for="hora_motorista"><strong>Hora Motorista:</strong></label>
+            <input type="number" id="hora_motorista" name="hora_motorista" step="0.01" value="0.00">
+
+            <label for="combustivel"><strong>Combustível:</strong></label>
+            <input type="number" id="combustivel" name="combustivel" step="0.01" value="0.00">
+
+            <label for="pneu"><strong>Pneu:</strong></label>
+            <input type="number" id="pneu" name="pneu" step="0.01" value="0.00">
+
+            <label for="troca_oleo"><strong>Troca de Óleo:</strong></label>
+            <input type="number" id="troca_oleo" name="troca_oleo" step="0.01" value="0.00">
+
+            <button type="button" onclick="salvarConfiguracao()">Salvar</button>
+        </form>
+        <a href="index.html">Voltar</a>
     </main>
 </body>
 </html>
