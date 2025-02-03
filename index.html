@@ -6,57 +6,79 @@
   <title>Custos com Frete</title>
   <link rel="stylesheet" href="styles.css">
   <script>
+    // Função que calcula os valores parciais (troca de óleo, pneu e IPVA)
     function calcularValores() {
-      // Cálculo da troca de óleo
+      // Troca de óleo
       let trocaValor = parseFloat(document.getElementById("troca_valor").value) || 0;
       let trocaKm = parseFloat(document.getElementById("troca_km").value) || 1;
       let trocaOleo = trocaValor / trocaKm;
       document.getElementById("troca_oleo").value = trocaOleo.toFixed(2);
 
-      // Cálculo do pneu
+      // Pneu
       let pneuValor = parseFloat(document.getElementById("pneu_valor").value) || 0;
       let pneuQtd = parseFloat(document.getElementById("pneu_qtd").value) || 1;
       let pneuKm = parseFloat(document.getElementById("pneu_km").value) || 1;
       let pneu = (pneuValor / pneuKm) * pneuQtd;
       document.getElementById("pneu").value = pneu.toFixed(2);
 
-      // Cálculo do seguro, licença e IPVA
+      // Seguro, Licença e IPVA
       let ipvaValor = parseFloat(document.getElementById("ipva_valor").value) || 0;
       let ipvaDias = parseFloat(document.getElementById("ipva_dias").value) || 1;
       let ipva = ipvaValor / ipvaDias;
       document.getElementById("ipva").value = ipva.toFixed(2);
     }
-    
-    function salvarConfiguracao() {
-      // Calcula os resultados dos custos
+
+    // Função que atualiza dinamicamente os resultados na aba Configuração
+    function atualizarResultadosConfig() {
       calcularValores();
-      
-      // Obtém os valores de cada custo fixo
+
+      // Atualiza o custo fixo total (combustível + pneu + troca de óleo + ipva)
       let combustivel = parseFloat(document.getElementById("combustivel").value) || 0;
       let pneu = parseFloat(document.getElementById("pneu").value) || 0;
       let trocaOleo = parseFloat(document.getElementById("troca_oleo").value) || 0;
       let ipva = parseFloat(document.getElementById("ipva").value) || 0;
       let custosFixos = combustivel + pneu + trocaOleo + ipva;
-      
-      // Salva os custos fixos no localStorage
+      document.getElementById("resultado_custos_fixos").value = custosFixos.toFixed(2);
+
+      // Atualiza o custo do motorista (custo por hora) dinamicamente
+      let salarioMotorista = parseFloat(document.getElementById("salario_motorista").value) || 0;
+      let diasTrabalho = parseFloat(document.getElementById("dias_trabalho").value) || 1;
+      let custoHoraMotorista = salarioMotorista / diasTrabalho;
+      document.getElementById("custo_hora_motorista").value = custoHoraMotorista.toFixed(2);
+    }
+    
+    // Salva os dados de configuração e atualiza o campo KM na aba de Cálculo
+    function salvarConfiguracao() {
+      // Atualiza os resultados dinâmicos
+      atualizarResultadosConfig();
+
+      // Obtém os valores dos custos fixos
+      let combustivel = parseFloat(document.getElementById("combustivel").value) || 0;
+      let pneu = parseFloat(document.getElementById("pneu").value) || 0;
+      let trocaOleo = parseFloat(document.getElementById("troca_oleo").value) || 0;
+      let ipva = parseFloat(document.getElementById("ipva").value) || 0;
+      let custosFixos = combustivel + pneu + trocaOleo + ipva;
+
+      // Salva os valores no localStorage
       localStorage.setItem("combustivel", combustivel);
       localStorage.setItem("pneu", pneu);
       localStorage.setItem("troca_oleo", trocaOleo);
       localStorage.setItem("ipva", ipva);
       localStorage.setItem("custos_fixos", custosFixos);
-      
+
       // Salva os dados do motorista
       let salarioMotorista = parseFloat(document.getElementById("salario_motorista").value) || 0;
       let diasTrabalho = parseFloat(document.getElementById("dias_trabalho").value) || 1;
       localStorage.setItem("salario_motorista", salarioMotorista);
       localStorage.setItem("dias_trabalho", diasTrabalho);
-      
+
       // Atualiza o campo KM na aba de cálculo com o total dos custos fixos
       document.getElementById("km_valor").textContent = custosFixos.toFixed(2);
-      
+
       alert("Configuração salva com sucesso!");
     }
 
+    // Função que calcula o custo total do frete (na aba de Cálculo)
     function calcularFrete() {
       // Recupera o valor dos custos fixos (exibido no campo KM)
       const kmValue = parseFloat(document.getElementById("km_valor").textContent) || 0;
@@ -66,7 +88,7 @@
       const pedagio = parseFloat(document.getElementById("pedagio").value) || 0;
       const almoco = parseFloat(document.getElementById("almoco").value) || 0;
       
-      // Calcula o custo do motorista
+      // Calcula o custo do motorista para o frete
       const salario = parseFloat(localStorage.getItem("salario_motorista")) || 0;
       const diasTrabalho = parseFloat(localStorage.getItem("dias_trabalho")) || 1;
       const custoMotorista = (salario / diasTrabalho) * horasFrete;
@@ -108,7 +130,7 @@
           <td>KM</td>
           <td>R$ <span id="km_valor">0.00</span></td>
         </tr>
-        <!-- "Tempo" foi substituído por "Horas de Frete" -->
+        <!-- "Horas de Frete" (antes "Tempo") -->
         <tr>
           <td>Horas de Frete</td>
           <td><input type="number" id="horas_frete" step="0.01" value=""></td>
@@ -136,15 +158,15 @@
       <div class="box">
         <h3>Combustível</h3>
         <label for="combustivel">Valor (R$):</label>
-        <input type="number" id="combustivel" step="0.01" value="">
+        <input type="number" id="combustivel" step="0.01" value="" oninput="atualizarResultadosConfig()">
       </div>
       
       <div class="box">
         <h3>Troca de Óleo</h3>
         <label for="troca_valor">Valor (R$):</label>
-        <input type="number" id="troca_valor" step="0.01" value="">
+        <input type="number" id="troca_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
         <label for="troca_km">Quilometragem:</label>
-        <input type="number" id="troca_km" step="1" value="">
+        <input type="number" id="troca_km" step="1" value="" oninput="atualizarResultadosConfig()">
         <label>Resultado:</label>
         <input type="number" id="troca_oleo" step="0.01" value="" readonly>
       </div>
@@ -152,11 +174,11 @@
       <div class="box">
         <h3>Pneu</h3>
         <label for="pneu_valor">Valor (R$):</label>
-        <input type="number" id="pneu_valor" step="0.01" value="">
+        <input type="number" id="pneu_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
         <label for="pneu_qtd">Quantidade:</label>
-        <input type="number" id="pneu_qtd" step="1" value="">
+        <input type="number" id="pneu_qtd" step="1" value="" oninput="atualizarResultadosConfig()">
         <label for="pneu_km">Quilometragem:</label>
-        <input type="number" id="pneu_km" step="1" value="">
+        <input type="number" id="pneu_km" step="1" value="" oninput="atualizarResultadosConfig()">
         <label>Resultado:</label>
         <input type="number" id="pneu" step="0.01" value="" readonly>
       </div>
@@ -164,9 +186,9 @@
       <div class="box">
         <h3>Seguro, Licença e IPVA</h3>
         <label for="ipva_valor">Valor (R$):</label>
-        <input type="number" id="ipva_valor" step="0.01" value="">
+        <input type="number" id="ipva_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
         <label for="ipva_dias">Dias:</label>
-        <input type="number" id="ipva_dias" step="1" value="">
+        <input type="number" id="ipva_dias" step="1" value="" oninput="atualizarResultadosConfig()">
         <label>Resultado:</label>
         <input type="number" id="ipva" step="0.01" value="" readonly>
       </div>
@@ -174,9 +196,17 @@
       <div class="box">
         <h3>Motorista</h3>
         <label for="salario_motorista">Salário (R$):</label>
-        <input type="number" id="salario_motorista" step="0.01" value="">
+        <input type="number" id="salario_motorista" step="0.01" value="" oninput="atualizarResultadosConfig()">
         <label for="dias_trabalho">Dias de Trabalho no Mês:</label>
-        <input type="number" id="dias_trabalho" step="1" value="">
+        <input type="number" id="dias_trabalho" step="1" value="" oninput="atualizarResultadosConfig()">
+        <label>Custo por Hora:</label>
+        <input type="number" id="custo_hora_motorista" step="0.01" value="" readonly>
+      </div>
+      
+      <div class="box">
+        <h3>Custos Fixos</h3>
+        <label>Resultado (Combustível + Pneu + Troca de Óleo + IPVA):</label>
+        <input type="number" id="resultado_custos_fixos" step="0.01" value="" readonly>
       </div>
       
       <button type="button" onclick="salvarConfiguracao()">Salvar</button>
@@ -185,6 +215,7 @@
   <script>abrirAba('calculo');</script>
 </body>
 </html>
+
 
 
 
