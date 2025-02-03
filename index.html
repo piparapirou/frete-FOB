@@ -1,114 +1,188 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custos com Frete</title>
-    <link rel="stylesheet" href="styles.css">
-    <script>
-        function calcularValores() {
-            let trocaValor = parseFloat(document.getElementById("troca_valor").value) || 0;
-            let trocaKm = parseFloat(document.getElementById("troca_km").value) || 1;
-            let trocaOleo = trocaValor / trocaKm;
-            document.getElementById("troca_oleo").value = trocaOleo.toFixed(2);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custos com Frete</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    function calcularValores() {
+      // Cálculo da troca de óleo
+      let trocaValor = parseFloat(document.getElementById("troca_valor").value) || 0;
+      let trocaKm = parseFloat(document.getElementById("troca_km").value) || 1;
+      let trocaOleo = trocaValor / trocaKm;
+      document.getElementById("troca_oleo").value = trocaOleo.toFixed(2);
 
-            let pneuValor = parseFloat(document.getElementById("pneu_valor").value) || 0;
-            let pneuQtd = parseFloat(document.getElementById("pneu_qtd").value) || 1;
-            let pneuKm = parseFloat(document.getElementById("pneu_km").value) || 1;
-            let pneu = (pneuValor / pneuKm) * pneuQtd;
-            document.getElementById("pneu").value = pneu.toFixed(2);
+      // Cálculo do pneu
+      let pneuValor = parseFloat(document.getElementById("pneu_valor").value) || 0;
+      let pneuQtd = parseFloat(document.getElementById("pneu_qtd").value) || 1;
+      let pneuKm = parseFloat(document.getElementById("pneu_km").value) || 1;
+      let pneu = (pneuValor / pneuKm) * pneuQtd;
+      document.getElementById("pneu").value = pneu.toFixed(2);
 
-            let ipvaValor = parseFloat(document.getElementById("ipva_valor").value) || 0;
-            let ipvaDias = parseFloat(document.getElementById("ipva_dias").value) || 1;
-            let ipva = ipvaValor / ipvaDias;
-            document.getElementById("ipva").value = ipva.toFixed(2);
-        }
-        
-        function salvarConfiguracao() {
-            calcularValores();
-            let custosFixos = parseFloat(document.getElementById("ipva").value) +
-                              parseFloat(document.getElementById("combustivel").value) +
-                              parseFloat(document.getElementById("pneu").value) +
-                              parseFloat(document.getElementById("troca_oleo").value);
-            
-            localStorage.setItem("combustivel", document.getElementById("combustivel").value);
-            localStorage.setItem("pneu", document.getElementById("pneu").value);
-            localStorage.setItem("troca_oleo", document.getElementById("troca_oleo").value);
-            localStorage.setItem("custos_fixos", custosFixos);
-            alert("Configuração salva com sucesso!");
-        }
+      // Cálculo do seguro, licença e IPVA
+      let ipvaValor = parseFloat(document.getElementById("ipva_valor").value) || 0;
+      let ipvaDias = parseFloat(document.getElementById("ipva_dias").value) || 1;
+      let ipva = ipvaValor / ipvaDias;
+      document.getElementById("ipva").value = ipva.toFixed(2);
+    }
+    
+    function salvarConfiguracao() {
+      // Calcula os resultados dos custos
+      calcularValores();
+      
+      // Obtém os valores de cada custo fixo
+      let combustivel = parseFloat(document.getElementById("combustivel").value) || 0;
+      let pneu = parseFloat(document.getElementById("pneu").value) || 0;
+      let trocaOleo = parseFloat(document.getElementById("troca_oleo").value) || 0;
+      let ipva = parseFloat(document.getElementById("ipva").value) || 0;
+      let custosFixos = combustivel + pneu + trocaOleo + ipva;
+      
+      // Salva os custos fixos no localStorage
+      localStorage.setItem("combustivel", combustivel);
+      localStorage.setItem("pneu", pneu);
+      localStorage.setItem("troca_oleo", trocaOleo);
+      localStorage.setItem("ipva", ipva);
+      localStorage.setItem("custos_fixos", custosFixos);
+      
+      // Salva os dados do motorista
+      let salarioMotorista = parseFloat(document.getElementById("salario_motorista").value) || 0;
+      let diasTrabalho = parseFloat(document.getElementById("dias_trabalho").value) || 1;
+      localStorage.setItem("salario_motorista", salarioMotorista);
+      localStorage.setItem("dias_trabalho", diasTrabalho);
+      
+      // Atualiza o campo KM na aba de cálculo com o total dos custos fixos
+      document.getElementById("km_valor").textContent = custosFixos.toFixed(2);
+      
+      alert("Configuração salva com sucesso!");
+    }
 
-        function abrirAba(aba) {
-            document.querySelectorAll('.aba').forEach(el => el.style.display = 'none');
-            document.getElementById(aba).style.display = 'block';
-        }
-    </script>
+    function calcularFrete() {
+      // Recupera o valor dos custos fixos (exibido no campo KM)
+      const kmValue = parseFloat(document.getElementById("km_valor").textContent) || 0;
+      
+      // Obtém os demais valores informados na aba de Cálculo
+      const horasFrete = parseFloat(document.getElementById("horas_frete").value) || 0;
+      const pedagio = parseFloat(document.getElementById("pedagio").value) || 0;
+      const almoco = parseFloat(document.getElementById("almoco").value) || 0;
+      
+      // Calcula o custo do motorista
+      const salario = parseFloat(localStorage.getItem("salario_motorista")) || 0;
+      const diasTrabalho = parseFloat(localStorage.getItem("dias_trabalho")) || 1;
+      const custoMotorista = (salario / diasTrabalho) * horasFrete;
+      
+      // Soma todos os custos para obter o total
+      const total = kmValue + pedagio + almoco + custoMotorista;
+      document.getElementById("total").textContent = total.toFixed(2);
+    }
+    
+    function abrirAba(aba) {
+      document.querySelectorAll('.aba').forEach(el => el.style.display = 'none');
+      document.getElementById(aba).style.display = 'block';
+    }
+  </script>
 </head>
 <body>
-    <header>
-        <h1>Custos com Frete</h1>
-    </header>
-    <nav>
-        <button onclick="abrirAba('calculo')">Cálculo do Frete</button>
-        <button onclick="abrirAba('config')">Configuração</button>
-    </nav>
-    <main>
-        <section id="calculo" class="aba">
-            <h2>Cálculo do Frete</h2>
-            <p><strong>Data:</strong> <input type="text" id="data" maxlength="50"></p>
-            <p><strong>Motorista:</strong> <input type="text" id="motorista" maxlength="50"></p>
-            <p><strong>Destino:</strong> <input type="text" id="destino" maxlength="50"></p>
-            
-            <table>
-                <tr><th>Descrição</th><th>Valor</th></tr>
-                <tr><td>KM</td><td>R$ <span id="km_valor"></span></td></tr>
-                <tr><td>Tempo</td><td><input type="number" id="tempo" step="0.01" value=""></td></tr>
-                <tr><td>Pedágio</td><td><input type="number" id="pedagio" step="0.01" value=""></td></tr>
-                <tr><td>Almoço</td><td><input type="number" id="almoco" step="0.01" value=""></td></tr>
-                <tr><th>Custo Total</th><th>R$ <span id="total"></span></th></tr>
-            </table>
-        </section>
-        
-        <section id="config" class="aba" style="display: none;">
-            <h2>Configuração</h2>
-            <div class="box">
-                <h3>Combustível</h3>
-                <label for="combustivel">Valor (R$):</label>
-                <input type="number" id="combustivel" step="0.01" value="">
-            </div>
-            <div class="box">
-                <h3>Troca de Óleo</h3>
-                <label for="troca_valor">Valor (R$):</label>
-                <input type="number" id="troca_valor" step="0.01" value="">
-                <label for="troca_km">Quilometragem:</label>
-                <input type="number" id="troca_km" step="1" value="">
-                <label>Resultado:</label>
-                <input type="number" id="troca_oleo" step="0.01" value="" readonly>
-            </div>
-            <div class="box">
-                <h3>Pneu</h3>
-                <label for="pneu_valor">Valor (R$):</label>
-                <input type="number" id="pneu_valor" step="0.01" value="">
-                <label for="pneu_qtd">Quantidade:</label>
-                <input type="number" id="pneu_qtd" step="1" value="">
-                <label for="pneu_km">Quilometragem:</label>
-                <input type="number" id="pneu_km" step="1" value="">
-                <label>Resultado:</label>
-                <input type="number" id="pneu" step="0.01" value="" readonly>
-            </div>
-            <div class="box">
-                <h3>Seguro, Licença e IPVA</h3>
-                <label for="ipva_valor">Valor (R$):</label>
-                <input type="number" id="ipva_valor" step="0.01" value="">
-                <label for="ipva_dias">Dias:</label>
-                <input type="number" id="ipva_dias" step="1" value="">
-                <label>Resultado:</label>
-                <input type="number" id="ipva" step="0.01" value="" readonly>
-            </div>
-            <button type="button" onclick="salvarConfiguracao()">Salvar</button>
-        </section>
-    </main>
-    <script>abrirAba('calculo');</script>
+  <header>
+    <h1>Custos com Frete</h1>
+  </header>
+  <nav>
+    <button onclick="abrirAba('calculo')">Cálculo do Frete</button>
+    <button onclick="abrirAba('config')">Configuração</button>
+  </nav>
+  <main>
+    <!-- Aba de Cálculo -->
+    <section id="calculo" class="aba">
+      <h2>Cálculo do Frete</h2>
+      <p><strong>Data:</strong> <input type="text" id="data" maxlength="50"></p>
+      <p><strong>Motorista:</strong> <input type="text" id="motorista" maxlength="50"></p>
+      <p><strong>Destino:</strong> <input type="text" id="destino" maxlength="50"></p>
+      
+      <table>
+        <tr>
+          <th>Descrição</th>
+          <th>Valor</th>
+        </tr>
+        <!-- O campo KM exibirá a soma dos custos configurados -->
+        <tr>
+          <td>KM</td>
+          <td>R$ <span id="km_valor">0.00</span></td>
+        </tr>
+        <!-- "Tempo" foi substituído por "Horas de Frete" -->
+        <tr>
+          <td>Horas de Frete</td>
+          <td><input type="number" id="horas_frete" step="0.01" value=""></td>
+        </tr>
+        <tr>
+          <td>Pedágio</td>
+          <td><input type="number" id="pedagio" step="0.01" value=""></td>
+        </tr>
+        <tr>
+          <td>Almoço</td>
+          <td><input type="number" id="almoco" step="0.01" value=""></td>
+        </tr>
+        <tr>
+          <th>Custo Total</th>
+          <th>R$ <span id="total"></span></th>
+        </tr>
+      </table>
+      <button type="button" onclick="calcularFrete()">Calcular Frete</button>
+    </section>
+    
+    <!-- Aba de Configuração -->
+    <section id="config" class="aba" style="display: none;">
+      <h2>Configuração</h2>
+      
+      <div class="box">
+        <h3>Combustível</h3>
+        <label for="combustivel">Valor (R$):</label>
+        <input type="number" id="combustivel" step="0.01" value="">
+      </div>
+      
+      <div class="box">
+        <h3>Troca de Óleo</h3>
+        <label for="troca_valor">Valor (R$):</label>
+        <input type="number" id="troca_valor" step="0.01" value="">
+        <label for="troca_km">Quilometragem:</label>
+        <input type="number" id="troca_km" step="1" value="">
+        <label>Resultado:</label>
+        <input type="number" id="troca_oleo" step="0.01" value="" readonly>
+      </div>
+      
+      <div class="box">
+        <h3>Pneu</h3>
+        <label for="pneu_valor">Valor (R$):</label>
+        <input type="number" id="pneu_valor" step="0.01" value="">
+        <label for="pneu_qtd">Quantidade:</label>
+        <input type="number" id="pneu_qtd" step="1" value="">
+        <label for="pneu_km">Quilometragem:</label>
+        <input type="number" id="pneu_km" step="1" value="">
+        <label>Resultado:</label>
+        <input type="number" id="pneu" step="0.01" value="" readonly>
+      </div>
+      
+      <div class="box">
+        <h3>Seguro, Licença e IPVA</h3>
+        <label for="ipva_valor">Valor (R$):</label>
+        <input type="number" id="ipva_valor" step="0.01" value="">
+        <label for="ipva_dias">Dias:</label>
+        <input type="number" id="ipva_dias" step="1" value="">
+        <label>Resultado:</label>
+        <input type="number" id="ipva" step="0.01" value="" readonly>
+      </div>
+      
+      <div class="box">
+        <h3>Motorista</h3>
+        <label for="salario_motorista">Salário (R$):</label>
+        <input type="number" id="salario_motorista" step="0.01" value="">
+        <label for="dias_trabalho">Dias de Trabalho no Mês:</label>
+        <input type="number" id="dias_trabalho" step="1" value="">
+      </div>
+      
+      <button type="button" onclick="salvarConfiguracao()">Salvar</button>
+    </section>
+  </main>
+  <script>abrirAba('calculo');</script>
 </body>
 </html>
 
