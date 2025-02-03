@@ -40,9 +40,11 @@
       let custosFixos = combustivel + pneu + trocaOleo + ipva;
       document.getElementById("resultado_custos_fixos").value = custosFixos.toFixed(2);
       
-      // Atualiza o valor da hora do motorista (input direto)
-      let valorHoraMotorista = parseFloat(document.getElementById("valor_hora_motorista").value) || 0;
-      document.getElementById("valor_hora_motorista").value = valorHoraMotorista.toFixed(2);
+      // Calcula o total do motorista (Valor da Hora * Quantidade de Horas)
+      let valorHora = parseFloat(document.getElementById("valor_hora_motorista").value) || 0;
+      let qtdHoras = parseFloat(document.getElementById("quantidade_horas_motorista").value) || 0;
+      let totalMotorista = valorHora * qtdHoras;
+      document.getElementById("total_motorista").value = totalMotorista.toFixed(2);
     }
     
     // Salva as configurações no localStorage e atualiza o campo KM na aba de Cálculo
@@ -62,9 +64,9 @@
       localStorage.setItem("ipva", ipva);
       localStorage.setItem("custos_fixos", custosFixos);
       
-      // Salva o valor da hora do motorista
-      let valorHoraMotorista = parseFloat(document.getElementById("valor_hora_motorista").value) || 0;
-      localStorage.setItem("valor_hora_motorista", valorHoraMotorista);
+      // Salva o total do motorista
+      let totalMotorista = parseFloat(document.getElementById("total_motorista").value) || 0;
+      localStorage.setItem("total_motorista", totalMotorista);
       
       // Atualiza o campo KM na aba de Cálculo com o total dos custos fixos
       document.getElementById("km_valor").textContent = custosFixos.toFixed(2);
@@ -78,16 +80,15 @@
       const kmValue = parseFloat(document.getElementById("km_valor").textContent) || 0;
       
       // Obtém os demais valores informados na aba de Cálculo
-      const horasFrete = parseFloat(document.getElementById("horas_frete").value) || 0;
       const pedagio = parseFloat(document.getElementById("pedagio").value) || 0;
       const almoco = parseFloat(document.getElementById("almoco").value) || 0;
       
-      // Calcula o custo do motorista: valor da hora x horas de serviço
-      const valorHoraMotorista = parseFloat(localStorage.getItem("valor_hora_motorista")) || 0;
-      const custoMotorista = valorHoraMotorista * horasFrete;
+      // Recupera o custo do motorista a partir da configuração
+      const motoristaCost = parseFloat(localStorage.getItem("total_motorista")) || 0;
+      document.getElementById("motorista_valor").textContent = motoristaCost.toFixed(2);
       
       // Soma todos os custos para obter o total
-      const total = kmValue + pedagio + almoco + custoMotorista;
+      const total = kmValue + motoristaCost + pedagio + almoco;
       document.getElementById("total").textContent = total.toFixed(2);
     }
     
@@ -97,6 +98,21 @@
       document.getElementById(aba).style.display = 'block';
     }
   </script>
+  <style>
+    /* Estilos simples para alinhar os campos na configuração */
+    .box label {
+      display: inline-block;
+      width: 220px;
+      text-align: right;
+      margin-right: 10px;
+    }
+    .box input {
+      margin-bottom: 10px;
+    }
+    .box div {
+      margin-bottom: 5px;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -125,8 +141,8 @@
           <td>R$ <span id="km_valor">0.00</span></td>
         </tr>
         <tr>
-          <td>Horas de Frete</td>
-          <td><input type="number" id="horas_frete" step="0.01" value=""></td>
+          <td>Motorista</td>
+          <td>R$ <span id="motorista_valor">0.00</span></td>
         </tr>
         <tr>
           <td>Pedágio</td>
@@ -150,52 +166,86 @@
       
       <div class="box">
         <h3>Combustível</h3>
-        <label for="combustivel">Valor (R$):</label>
-        <input type="number" id="combustivel" step="0.01" value="" oninput="atualizarResultadosConfig()">
+        <div>
+          <label for="combustivel">Valor (R$):</label>
+          <input type="number" id="combustivel" step="0.01" value="" oninput="atualizarResultadosConfig()">
+        </div>
       </div>
       
       <div class="box">
         <h3>Troca de Óleo</h3>
-        <label for="troca_valor">Valor (R$):</label>
-        <input type="number" id="troca_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
-        <label for="troca_km">Quilometragem:</label>
-        <input type="number" id="troca_km" step="1" value="" oninput="atualizarResultadosConfig()">
-        <label>Total:</label>
-        <input type="number" id="troca_oleo" step="0.01" value="" readonly>
+        <div>
+          <label for="troca_valor">Valor (R$):</label>
+          <input type="number" id="troca_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
+        </div>
+        <div>
+          <label for="troca_km">Quilometragem:</label>
+          <input type="number" id="troca_km" step="1" value="" oninput="atualizarResultadosConfig()">
+        </div>
+        <div>
+          <label>Total:</label>
+          <input type="number" id="troca_oleo" step="0.01" value="" readonly>
+        </div>
       </div>
       
       <div class="box">
         <h3>Pneu</h3>
-        <label for="pneu_valor">Valor (R$):</label>
-        <input type="number" id="pneu_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
-        <label for="pneu_qtd">Quantidade:</label>
-        <input type="number" id="pneu_qtd" step="1" value="" oninput="atualizarResultadosConfig()">
-        <label for="pneu_km">Quilometragem:</label>
-        <input type="number" id="pneu_km" step="1" value="" oninput="atualizarResultadosConfig()">
-        <label>Total:</label>
-        <input type="number" id="pneu" step="0.01" value="" readonly>
+        <div>
+          <label for="pneu_valor">Valor (R$):</label>
+          <input type="number" id="pneu_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
+        </div>
+        <div>
+          <label for="pneu_qtd">Quantidade:</label>
+          <input type="number" id="pneu_qtd" step="1" value="" oninput="atualizarResultadosConfig()">
+        </div>
+        <div>
+          <label for="pneu_km">Quilometragem:</label>
+          <input type="number" id="pneu_km" step="1" value="" oninput="atualizarResultadosConfig()">
+        </div>
+        <div>
+          <label>Total:</label>
+          <input type="number" id="pneu" step="0.01" value="" readonly>
+        </div>
       </div>
       
       <div class="box">
         <h3>Seguro, Licença e IPVA</h3>
-        <label for="ipva_valor">Valor (R$):</label>
-        <input type="number" id="ipva_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
-        <label for="ipva_dias">Dias:</label>
-        <input type="number" id="ipva_dias" step="1" value="" oninput="atualizarResultadosConfig()">
-        <label>Total:</label>
-        <input type="number" id="ipva" step="0.01" value="" readonly>
+        <div>
+          <label for="ipva_valor">Valor (R$):</label>
+          <input type="number" id="ipva_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
+        </div>
+        <div>
+          <label for="ipva_dias">Dias:</label>
+          <input type="number" id="ipva_dias" step="1" value="" oninput="atualizarResultadosConfig()">
+        </div>
+        <div>
+          <label>Total:</label>
+          <input type="number" id="ipva" step="0.01" value="" readonly>
+        </div>
       </div>
       
       <div class="box">
         <h3>Motorista</h3>
-        <label for="valor_hora_motorista">Valor da Hora (R$):</label>
-        <input type="number" id="valor_hora_motorista" step="0.01" value="" oninput="atualizarResultadosConfig()">
+        <div>
+          <label for="valor_hora_motorista">Valor da Hora (R$):</label>
+          <input type="number" id="valor_hora_motorista" step="0.01" value="" oninput="atualizarResultadosConfig()">
+        </div>
+        <div>
+          <label for="quantidade_horas_motorista">Quantidade de Horas:</label>
+          <input type="number" id="quantidade_horas_motorista" step="0.01" value="" oninput="atualizarResultadosConfig()">
+        </div>
+        <div>
+          <label>Total Motorista:</label>
+          <input type="number" id="total_motorista" step="0.01" value="" readonly>
+        </div>
       </div>
       
       <div class="box">
         <h3>Custos Fixos</h3>
-        <label>Total (Combustível + Pneu + Troca de Óleo + IPVA):</label>
-        <input type="number" id="resultado_custos_fixos" step="0.01" value="" readonly>
+        <div>
+          <label>Total (Combustível + Pneu + Troca de Óleo + IPVA):</label>
+          <input type="number" id="resultado_custos_fixos" step="0.01" value="" readonly>
+        </div>
       </div>
       
       <button type="button" onclick="salvarConfiguracao()">Salvar</button>
