@@ -35,7 +35,7 @@ main {
   padding: 20px;
 }
 
-/* Container para organizar os blocos em 3 colunas */
+/* Container para organizar os blocos responsivamente */
 .config-container {
   display: flex;
   flex-wrap: wrap;
@@ -43,7 +43,7 @@ main {
 }
 
 .config-container .box {
-  flex: 1 1 calc(33.33% - 20px);
+  flex: 1 1 300px;  /* Cada bloco terá pelo menos 300px; se a tela permitir, serão organizados em linha */
   box-sizing: border-box;
   background-color: #ffffff;
   border: 1px solid #ccc;
@@ -95,4 +95,3 @@ button {
   cursor: pointer;
   font-size: 16px;
 }
-
