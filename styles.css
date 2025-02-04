@@ -35,15 +35,24 @@ main {
   padding: 20px;
 }
 
-/* Blocos de Configuração com cantos arredondados */
-.box {
+/* Container para organizar os blocos em 3 colunas */
+.config-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.config-container .box {
+  flex: 1 1 calc(33.33% - 20px);
+  box-sizing: border-box;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 10px;
   padding: 15px;
-  margin: 10px 0;
+  margin-bottom: 10px;
 }
 
+/* Blocos de Configuração - estilos internos */
 .box label {
   display: inline-block;
   width: 220px;
