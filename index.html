@@ -88,11 +88,44 @@
       document.getElementById("total").textContent = custoFrete.toFixed(2);
     }
     
+    // Função para alinhar os tamanhos dos blocos da aba de Configuração
+    function alignBoxHeights() {
+      const boxes = document.querySelectorAll('.config-container .box');
+      if (!boxes.length) return;
+      
+      // Reseta as alturas para que possamos calcular com os tamanhos naturais
+      boxes.forEach(box => {
+        box.style.height = 'auto';
+      });
+      
+      // Determina quais caixas estão na primeira linha (com o menor offsetTop)
+      const firstRowTop = boxes[0].offsetTop;
+      const firstRowBoxes = Array.from(boxes).filter(box => Math.abs(box.offsetTop - firstRowTop) < 5);
+      
+      // Encontra a menor altura entre os blocos da primeira linha
+      let minHeight = Infinity;
+      firstRowBoxes.forEach(box => {
+        const height = box.offsetHeight;
+        if (height < minHeight) {
+          minHeight = height;
+        }
+      });
+      
+      // Aplica essa altura a todos os blocos
+      boxes.forEach(box => {
+        box.style.height = minHeight + "px";
+      });
+    }
+    
     // Alterna entre as abas
     function abrirAba(aba) {
       document.querySelectorAll('.aba').forEach(el => el.style.display = 'none');
       document.getElementById(aba).style.display = 'block';
     }
+    
+    // Chama a função de alinhamento após o carregamento e ao redimensionar a janela
+    window.addEventListener('load', alignBoxHeights);
+    window.addEventListener('resize', alignBoxHeights);
   </script>
 </head>
 <body>
@@ -252,4 +285,5 @@
   </main>
 </body>
 </html>
+
 
