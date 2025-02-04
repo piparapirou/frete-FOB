@@ -56,7 +56,7 @@
       alert("Configuração salva com sucesso!");
     }
     
-    // Calcula o custo do frete na aba de Cálculo de forma dinâmica
+    // Calcula o custo do frete de forma dinâmica na aba de Cálculo
     function calcularFrete() {
       // Recupera o valor dos custos fixos para o Custo KM
       const custosFixos = parseFloat(localStorage.getItem("custos_fixos")) || 0;
@@ -76,12 +76,15 @@
       const depreciacao = (custoKM + tempo + pedagio) * (percentualDepreciacao / 100);
       document.getElementById("depreciacao").textContent = depreciacao.toFixed(2);
       
-      // Recupera o valor do Seguro (calculado na configuração)
-      const seguro = parseFloat(localStorage.getItem("seguro")) || 0;
-      document.getElementById("seguro_display").textContent = seguro.toFixed(2);
+      // Recupera o valor do Seguro (configurado na aba de Configuração) e calcula dividindo pelo Fretes no dia
+      const seguroConfig = parseFloat(localStorage.getItem("seguro")) || 0;
+      const fretesDia = parseFloat(document.getElementById("fretes_dia").value) || 1;
+      const seguroCalculated = seguroConfig / fretesDia;
+      document.getElementById("seguro_display").textContent = seguroCalculated.toFixed(2);
       
-      // Calcula o Custo do Frete final: Custo KM + Tempo + Pedágio + Seguro + Depreciação
-      const custoFrete = custoKM + tempo + pedagio + seguro + depreciacao;
+      // Calcula o Custo do Frete final:
+      // Custo Frete = Custo KM + Tempo + Pedágio + Seguro (calculado) + Depreciação
+      const custoFrete = custoKM + tempo + pedagio + seguroCalculated + depreciacao;
       document.getElementById("total").textContent = custoFrete.toFixed(2);
     }
     
@@ -104,9 +107,23 @@
     <!-- Aba de Cálculo -->
     <section id="calculo" class="aba">
       <h2>Cálculo do Frete</h2>
-      <p><strong>Data:</strong> <input type="text" id="data" maxlength="50"></p>
-      <p><strong>Motorista:</strong> <input type="text" id="motorista" maxlength="50"></p>
-      <p><strong>Destino:</strong> <input type="text" id="destino" maxlength="50"></p>
+      <!-- Cabeçalho com Data e Fretes no dia -->
+      <p>
+        <strong>Data:</strong> 
+        <input type="date" id="data">
+      </p>
+      <p>
+        <strong>Fretes no dia:</strong> 
+        <input type="number" id="fretes_dia" step="1" value="" oninput="calcularFrete()">
+      </p>
+      <p>
+        <strong>Motorista:</strong> 
+        <input type="text" id="motorista" maxlength="50">
+      </p>
+      <p>
+        <strong>Destino:</strong> 
+        <input type="text" id="destino" maxlength="50">
+      </p>
       
       <table>
         <tr>
@@ -154,13 +171,13 @@
           <th>R$ <span id="total">0.00</span></th>
         </tr>
       </table>
-      <!-- Botão removido, o cálculo é feito dinamicamente -->
+      <!-- O cálculo é dinâmico; não há botão para acionar -->
     </section>
     
     <!-- Aba de Configuração -->
     <section id="config" class="aba" style="display: none;">
       <h2>Configuração</h2>
-      <!-- Container para organizar os blocos em 3 colunas -->
+      <!-- Container para organizar os blocos responsivamente -->
       <div class="config-container">
         <div class="box">
           <h3>Combustível</h3>
@@ -235,3 +252,4 @@
   </main>
 </body>
 </html>
+
