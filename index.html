@@ -6,7 +6,7 @@
   <title>Custos com Frete</title>
   <link rel="stylesheet" href="styles.css">
   <script>
-    // Função para calcular os valores parciais dos blocos de configuração
+    // Calcula os valores parciais dos blocos de configuração
     function calcularValores() {
       // Troca de Óleo
       let trocaValor = parseFloat(document.getElementById("troca_valor").value) || 0;
@@ -21,7 +21,7 @@
       let pneu = (pneuValor / pneuKm) * pneuQtd;
       document.getElementById("pneu").value = pneu.toFixed(2);
       
-      // Seguro, Licença e IPVA (será considerado como "Seguro")
+      // Seguro, Licença e IPVA (usado como "Seguro")
       let ipvaValor = parseFloat(document.getElementById("ipva_valor").value) || 0;
       let ipvaDias = parseFloat(document.getElementById("ipva_dias").value) || 1;
       let ipva = ipvaValor / ipvaDias;
@@ -45,76 +45,45 @@
       let combustivel = parseFloat(document.getElementById("combustivel").value) || 0;
       let pneu = parseFloat(document.getElementById("pneu").value) || 0;
       let trocaOleo = parseFloat(document.getElementById("troca_oleo").value) || 0;
-      // Para o cálculo do Custo KM, consideramos somente combustivel, pneu e troca de óleo:
       let custosFixos = combustivel + pneu + trocaOleo;
       localStorage.setItem("custos_fixos", custosFixos);
       
-      // Salva o valor de "Seguro" (obtido a partir do bloco Seguro, Licença e IPVA)
       let ipva = parseFloat(document.getElementById("ipva").value) || 0;
       localStorage.setItem("seguro", ipva);
       
       alert("Configuração salva com sucesso!");
+      calcularFrete();
     }
     
     // Calcula o custo do frete de forma dinâmica na aba de Cálculo
     function calcularFrete() {
-      // Recupera o valor dos custos fixos para o Custo KM
+      // Recupera os custos fixos configurados para o Custo KM
       const custosFixos = parseFloat(localStorage.getItem("custos_fixos")) || 0;
       
       // Obtém o KM Total informado pelo usuário
       const kmTotal = parseFloat(document.getElementById("km_total").value) || 0;
-      // Calcula o Custo KM: multiplicação do KM Total pelo total dos custos fixos
+      // Custo KM = KM Total × (Combustível + Pneu + Troca de Óleo)
       const custoKM = kmTotal * custosFixos;
       document.getElementById("custo_km").textContent = custoKM.toFixed(2);
       
-      // Obtém os demais valores informados na aba de Cálculo
+      // Obtém os demais valores
       const tempo = parseFloat(document.getElementById("tempo").value) || 0;
       const pedagio = parseFloat(document.getElementById("pedagio").value) || 0;
       const percentualDepreciacao = parseFloat(document.getElementById("percentual_depreciacao").value) || 0;
       
-      // Calcula a Depreciação: (Custo KM + Tempo + Pedágio) * (percentual / 100)
+      // Depreciação = (Custo KM + Tempo + Pedágio) × (percentual / 100)
       const depreciacao = (custoKM + tempo + pedagio) * (percentualDepreciacao / 100);
       document.getElementById("depreciacao").textContent = depreciacao.toFixed(2);
       
-      // Recupera o valor do Seguro (configurado na aba de Configuração) e calcula dividindo pelo Fretes no dia
+      // Seguro = (Valor configurado no bloco Seguro, Licença e IPVA) ÷ (Fretes no dia)
       const seguroConfig = parseFloat(localStorage.getItem("seguro")) || 0;
       const fretesDia = parseFloat(document.getElementById("fretes_dia").value) || 1;
       const seguroCalculated = seguroConfig / fretesDia;
       document.getElementById("seguro_display").textContent = seguroCalculated.toFixed(2);
       
-      // Calcula o Custo do Frete final:
-      // Custo Frete = Custo KM + Tempo + Pedágio + Seguro (calculado) + Depreciação
+      // Custo do Frete = Custo KM + Tempo + Pedágio + Seguro + Depreciação
       const custoFrete = custoKM + tempo + pedagio + seguroCalculated + depreciacao;
       document.getElementById("total").textContent = custoFrete.toFixed(2);
-    }
-    
-    // Função para alinhar os tamanhos dos blocos da aba de Configuração
-    function alignBoxHeights() {
-      const boxes = document.querySelectorAll('.config-container .box');
-      if (!boxes.length) return;
-      
-      // Reseta as alturas para que possamos calcular com os tamanhos naturais
-      boxes.forEach(box => {
-        box.style.height = 'auto';
-      });
-      
-      // Determina quais caixas estão na primeira linha (com o menor offsetTop)
-      const firstRowTop = boxes[0].offsetTop;
-      const firstRowBoxes = Array.from(boxes).filter(box => Math.abs(box.offsetTop - firstRowTop) < 5);
-      
-      // Encontra a menor altura entre os blocos da primeira linha
-      let minHeight = Infinity;
-      firstRowBoxes.forEach(box => {
-        const height = box.offsetHeight;
-        if (height < minHeight) {
-          minHeight = height;
-        }
-      });
-      
-      // Aplica essa altura a todos os blocos
-      boxes.forEach(box => {
-        box.style.height = minHeight + "px";
-      });
     }
     
     // Alterna entre as abas
@@ -122,10 +91,6 @@
       document.querySelectorAll('.aba').forEach(el => el.style.display = 'none');
       document.getElementById(aba).style.display = 'block';
     }
-    
-    // Chama a função de alinhamento após o carregamento e ao redimensionar a janela
-    window.addEventListener('load', alignBoxHeights);
-    window.addEventListener('resize', alignBoxHeights);
   </script>
 </head>
 <body>
@@ -140,21 +105,20 @@
     <!-- Aba de Cálculo -->
     <section id="calculo" class="aba">
       <h2>Cálculo do Frete</h2>
-      <!-- Cabeçalho com Data e Fretes no dia -->
       <p>
-        <strong>Data:</strong> 
+        <strong>Data:</strong>
         <input type="date" id="data">
       </p>
       <p>
-        <strong>Fretes no dia:</strong> 
+        <strong>Fretes no dia:</strong>
         <input type="number" id="fretes_dia" step="1" value="" oninput="calcularFrete()">
       </p>
       <p>
-        <strong>Motorista:</strong> 
+        <strong>Motorista:</strong>
         <input type="text" id="motorista" maxlength="50">
       </p>
       <p>
-        <strong>Destino:</strong> 
+        <strong>Destino:</strong>
         <input type="text" id="destino" maxlength="50">
       </p>
       
@@ -204,13 +168,12 @@
           <th>R$ <span id="total">0.00</span></th>
         </tr>
       </table>
-      <!-- O cálculo é dinâmico; não há botão para acionar -->
     </section>
     
     <!-- Aba de Configuração -->
     <section id="config" class="aba" style="display: none;">
       <h2>Configuração</h2>
-      <!-- Container para organizar os blocos responsivamente -->
+      <!-- Container usando CSS Grid para organizar os blocos responsivamente -->
       <div class="config-container">
         <div class="box">
           <h3>Combustível</h3>
@@ -219,7 +182,6 @@
             <input type="number" id="combustivel" step="0.01" value="" oninput="atualizarResultadosConfig()">
           </div>
         </div>
-        
         <div class="box">
           <h3>Troca de Óleo</h3>
           <div>
@@ -235,7 +197,6 @@
             <input type="number" id="troca_oleo" step="0.01" value="" readonly>
           </div>
         </div>
-        
         <div class="box">
           <h3>Pneu</h3>
           <div>
@@ -255,7 +216,6 @@
             <input type="number" id="pneu" step="0.01" value="" readonly>
           </div>
         </div>
-        
         <div class="box">
           <h3>Seguro, Licença e IPVA</h3>
           <div>
@@ -271,7 +231,6 @@
             <input type="number" id="ipva" step="0.01" value="" readonly>
           </div>
         </div>
-        
         <div class="box">
           <h3>Custos Fixos</h3>
           <div>
