@@ -48,22 +48,22 @@ main {
   border: 1px solid #ccc;
   border-radius: 10px;
   padding: 15px;
-  /* O grid faz com que as caixas tenham a mesma altura na mesma linha automaticamente */
 }
 
 .box h3 {
   margin-top: 0;
 }
 
+/* Alinha os rótulos e inputs à esquerda, com os rótulos em bloco */
 .box label {
-  display: inline-block;
-  width: 220px;
-  text-align: right;
-  margin-right: 10px;
-  vertical-align: middle;
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 .box input {
+  width: 100%;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 5px;
