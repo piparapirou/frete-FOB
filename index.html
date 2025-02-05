@@ -6,7 +6,7 @@
   <title>Custos com Frete</title>
   <link rel="stylesheet" href="styles.css">
   <script>
-    // Calcula os valores parciais dos blocos de configuração
+    // Função para calcular os valores parciais dos blocos de configuração
     function calcularValores() {
       // Troca de Óleo
       let trocaValor = parseFloat(document.getElementById("troca_valor").value) || 0;
@@ -121,7 +121,6 @@
         <strong>Destino:</strong>
         <input type="text" id="destino" maxlength="50">
       </p>
-      
       <table>
         <tr>
           <th>Descrição</th>
@@ -173,70 +172,45 @@
     <!-- Aba de Configuração -->
     <section id="config" class="aba" style="display: none;">
       <h2>Configuração</h2>
-      <!-- Container usando CSS Grid para organizar os blocos responsivamente -->
       <div class="config-container">
         <div class="box">
           <h3>Combustível</h3>
-          <div>
-            <label for="combustivel">Valor (R$):</label>
-            <input type="number" id="combustivel" step="0.01" value="" oninput="atualizarResultadosConfig()">
-          </div>
+          <label for="combustivel">Valor (R$):</label>
+          <input type="number" id="combustivel" step="0.01" value="" oninput="atualizarResultadosConfig()">
         </div>
         <div class="box">
           <h3>Troca de Óleo</h3>
-          <div>
-            <label for="troca_valor">Valor (R$):</label>
-            <input type="number" id="troca_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
-          </div>
-          <div>
-            <label for="troca_km">Quilometragem:</label>
-            <input type="number" id="troca_km" step="1" value="" oninput="atualizarResultadosConfig()">
-          </div>
-          <div>
-            <label>Total:</label>
-            <input type="number" id="troca_oleo" step="0.01" value="" readonly>
-          </div>
+          <label for="troca_valor">Valor (R$):</label>
+          <input type="number" id="troca_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
+          <label for="troca_km">Quilometragem:</label>
+          <input type="number" id="troca_km" step="1" value="" oninput="atualizarResultadosConfig()">
+          <label>Total:</label>
+          <input type="number" id="troca_oleo" step="0.01" value="" readonly>
         </div>
         <div class="box">
           <h3>Pneu</h3>
-          <div>
-            <label for="pneu_valor">Valor (R$):</label>
-            <input type="number" id="pneu_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
-          </div>
-          <div>
-            <label for="pneu_qtd">Quantidade:</label>
-            <input type="number" id="pneu_qtd" step="1" value="" oninput="atualizarResultadosConfig()">
-          </div>
-          <div>
-            <label for="pneu_km">Quilometragem:</label>
-            <input type="number" id="pneu_km" step="1" value="" oninput="atualizarResultadosConfig()">
-          </div>
-          <div>
-            <label>Total:</label>
-            <input type="number" id="pneu" step="0.01" value="" readonly>
-          </div>
+          <label for="pneu_valor">Valor (R$):</label>
+          <input type="number" id="pneu_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
+          <label for="pneu_qtd">Quantidade:</label>
+          <input type="number" id="pneu_qtd" step="1" value="" oninput="atualizarResultadosConfig()">
+          <label for="pneu_km">Quilometragem:</label>
+          <input type="number" id="pneu_km" step="1" value="" oninput="atualizarResultadosConfig()">
+          <label>Total:</label>
+          <input type="number" id="pneu" step="0.01" value="" readonly>
         </div>
         <div class="box">
           <h3>Seguro, Licença e IPVA</h3>
-          <div>
-            <label for="ipva_valor">Valor (R$):</label>
-            <input type="number" id="ipva_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
-          </div>
-          <div>
-            <label for="ipva_dias">Dias:</label>
-            <input type="number" id="ipva_dias" step="1" value="" oninput="atualizarResultadosConfig()">
-          </div>
-          <div>
-            <label>Total:</label>
-            <input type="number" id="ipva" step="0.01" value="" readonly>
-          </div>
+          <label for="ipva_valor">Valor (R$):</label>
+          <input type="number" id="ipva_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
+          <label for="ipva_dias">Dias:</label>
+          <input type="number" id="ipva_dias" step="1" value="" oninput="atualizarResultadosConfig()">
+          <label>Total:</label>
+          <input type="number" id="ipva" step="0.01" value="" readonly>
         </div>
         <div class="box">
           <h3>Custos Fixos</h3>
-          <div>
-            <label>Total (Combustível + Pneu + Troca de Óleo):</label>
-            <input type="number" id="resultado_custos_fixos" step="0.01" value="" readonly>
-          </div>
+          <label>Total (Combustível + Pneu + Troca de Óleo):</label>
+          <input type="number" id="resultado_custos_fixos" step="0.01" value="" readonly>
         </div>
       </div>
       <button type="button" onclick="salvarConfiguracao()">Salvar</button>
