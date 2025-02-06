@@ -62,7 +62,7 @@ main {
   font-weight: bold;
 }
 
-/* Aqui os inputs terão metade da largura disponível */
+/* Aqui, os inputs terão 50% da largura do contêiner do bloco */
 .box input {
   width: 50%;
   border: 1px solid #ccc;
@@ -90,6 +90,11 @@ main {
   align-items: center;
   justify-content: center;
   gap: 10px;
+}
+
+/* Para o campo de resultado de custos fixos, usamos uma largura fixa aproximada a 20 caracteres */
+#resultado_custos_fixos {
+  width: 20ch;
 }
 
 .cf-label {
