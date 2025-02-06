@@ -209,11 +209,14 @@
           <input type="number" id="ipva" step="0.01" value="" readonly>
         </div>
       </div>
-      <!-- Bloco Custos Fixos posicionado abaixo dos demais blocos -->
+      <!-- Bloco Custos Fixos com mesmo padrão dos demais blocos -->
       <div class="custos-fixos-container">
-        <div class="custos-fixos-box">
-          <span class="cf-label" title="Custos Fixos = Combustível + Pneu + Troca de Óleo">Total (Combustível + Pneu + Troca de Óleo):</span>
-          <input type="number" id="resultado_custos_fixos" step="0.01" value="" readonly>
+        <div class="box">
+          <h3>Custos Fixos</h3>
+          <div class="inline">
+            <span class="cf-label" title="Custos Fixos = Combustível + Pneu + Troca de Óleo">Total (Combustível + Pneu + Troca de Óleo):</span>
+            <input type="number" id="resultado_custos_fixos" step="0.01" value="" readonly>
+          </div>
         </div>
       </div>
       <button type="button" onclick="salvarConfiguracao()">Salvar</button>
