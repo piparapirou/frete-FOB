@@ -35,7 +35,7 @@ main {
   padding: 20px;
 }
 
-/* Container para organizar os blocos de configuração com CSS Grid */
+/* Container para organizar os blocos de Configuração em grid */
 .config-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -62,28 +62,38 @@ main {
   font-weight: bold;
 }
 
+/* Aqui os inputs terão metade da largura disponível */
 .box input {
-  width: 100%;
+  width: 50%;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 5px;
   margin-bottom: 10px;
 }
 
-/* Estilização do bloco Custos Fixos */
+/* Bloco Custos Fixos com mesmo padrão dos demais blocos */
 .custos-fixos-container {
-  text-align: center;
   margin-top: 20px;
+  text-align: center;
 }
 
-.custos-fixos-box {
-  display: inline-flex;
+.custos-fixos-container .box {
+  display: inline-block;
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
+}
+
+/* Exibe o rótulo e a caixa na mesma linha no bloco Custos Fixos */
+.inline {
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 10px 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #ffffff;
+}
+
+.cf-label {
+  font-weight: bold;
 }
 
 /* Estilização da Tabela de Cálculo */
