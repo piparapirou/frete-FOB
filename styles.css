@@ -35,21 +35,7 @@ main {
   padding: 20px;
 }
 
-/* Container para o bloco Custos Fixos (ocupa toda a largura) */
-.custos-fixos-container {
-  margin-bottom: 20px;
-}
-
-.custos-fixos-container .box {
-  width: 100%;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 15px;
-}
-
-/* Container para organizar os demais blocos responsivamente com CSS Grid */
+/* Container para organizar os blocos de configuração com CSS Grid */
 .config-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -84,6 +70,22 @@ main {
   margin-bottom: 10px;
 }
 
+/* Estilização do bloco Custos Fixos */
+.custos-fixos-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.custos-fixos-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
 /* Estilização da Tabela de Cálculo */
 table {
   width: 100%;
@@ -112,4 +114,5 @@ button {
   cursor: pointer;
   font-size: 16px;
 }
+
 
