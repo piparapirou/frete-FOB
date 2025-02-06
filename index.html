@@ -71,7 +71,7 @@
       const pedagio = parseFloat(document.getElementById("pedagio").value) || 0;
       const percentualDepreciacao = parseFloat(document.getElementById("percentual_depreciacao").value) || 0;
       
-      // Depreciação = (Custo KM + Tempo + Pedágio) × (percentual / 100)
+      // Depreciação = (Custo KM + Tempo + Pedágio) × (Percentual / 100)
       const depreciacao = (custoKM + tempo + pedagio) * (percentualDepreciacao / 100);
       document.getElementById("depreciacao").textContent = depreciacao.toFixed(2);
       
@@ -172,15 +172,7 @@
     <!-- Aba de Configuração -->
     <section id="config" class="aba" style="display: none;">
       <h2>Configuração</h2>
-      <!-- Bloco Custos Fixos (um nível acima dos demais) -->
-      <div class="custos-fixos-container">
-        <div class="box">
-          <h3>Custos Fixos</h3>
-          <label title="Custos Fixos = Combustível + Pneu + Troca de Óleo">Total (Combustível + Pneu + Troca de Óleo):</label>
-          <input type="number" id="resultado_custos_fixos" step="0.01" value="" readonly>
-        </div>
-      </div>
-      <!-- Demais blocos organizados em grid -->
+      <!-- Blocos de configuração organizados em grid -->
       <div class="config-container">
         <div class="box">
           <h3>Combustível</h3>
@@ -211,10 +203,17 @@
           <h3>Seguro, Licença e IPVA</h3>
           <label for="ipva_valor" title="Informe o valor anual de Seguro, Licença e IPVA">Valor (R$):</label>
           <input type="number" id="ipva_valor" step="0.01" value="" oninput="atualizarResultadosConfig()">
-          <label for="ipva_dias" title="Informe o número de dias do ano para o cálculo">Dias:</label>
+          <label for="ipva_dias" title="Informe o número de dias para o cálculo">Dias:</label>
           <input type="number" id="ipva_dias" step="1" value="" oninput="atualizarResultadosConfig()">
           <label title="Seguro, Licença e IPVA = Valor / Dias">Total:</label>
           <input type="number" id="ipva" step="0.01" value="" readonly>
+        </div>
+      </div>
+      <!-- Bloco Custos Fixos posicionado abaixo dos demais blocos -->
+      <div class="custos-fixos-container">
+        <div class="custos-fixos-box">
+          <span class="cf-label" title="Custos Fixos = Combustível + Pneu + Troca de Óleo">Total (Combustível + Pneu + Troca de Óleo):</span>
+          <input type="number" id="resultado_custos_fixos" step="0.01" value="" readonly>
         </div>
       </div>
       <button type="button" onclick="salvarConfiguracao()">Salvar</button>
@@ -222,7 +221,6 @@
   </main>
 </body>
 </html>
-
 
 
 
