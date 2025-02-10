@@ -28,7 +28,7 @@
       document.getElementById("ipva").value = ipva.toFixed(2);
     }
     
-    // Atualiza os totais dinâmicos na aba de Configuração
+    // Atualiza os totais dinâmicos na aba de Configuração, incluindo o bloco Motorista
     function atualizarResultadosConfig() {
       calcularValores();
       // Custo Fixo = Combustível + Pneu + Troca de Óleo
@@ -37,6 +37,12 @@
       let trocaOleo = parseFloat(document.getElementById("troca_oleo").value) || 0;
       let custosFixos = combustivel + pneu + trocaOleo;
       document.getElementById("resultado_custos_fixos").value = custosFixos.toFixed(2);
+      
+      // Motorista = Hora * Horas Trabalhadas
+      let motoristaHora = parseFloat(document.getElementById("motorista_hora").value) || 0;
+      let motoristaHoras = parseFloat(document.getElementById("motorista_horas").value) || 0;
+      let motoristaTotal = motoristaHora * motoristaHoras;
+      document.getElementById("motorista_total").value = motoristaTotal.toFixed(2);
     }
     
     // Salva os dados de configuração e armazena os valores necessários
@@ -50,6 +56,10 @@
       
       let ipva = parseFloat(document.getElementById("ipva").value) || 0;
       localStorage.setItem("seguro", ipva);
+      
+      // Salva o valor do bloco Motorista (que servirá como "Tempo")
+      let motoristaTotal = parseFloat(document.getElementById("motorista_total").value) || 0;
+      localStorage.setItem("motorista_total", motoristaTotal);
       
       alert("Configuração salva com sucesso!");
       calcularFrete();
@@ -66,8 +76,11 @@
       const custoKM = kmTotal * custosFixos;
       document.getElementById("custo_km").textContent = custoKM.toFixed(2);
       
+      // Tempo = Valor armazenado do bloco Motorista (Hora x Horas Trabalhadas)
+      const tempo = parseFloat(localStorage.getItem("motorista_total")) || 0;
+      document.getElementById("tempo_display").textContent = tempo.toFixed(2);
+      
       // Obtém os demais valores
-      const tempo = parseFloat(document.getElementById("tempo").value) || 0;
       const pedagio = parseFloat(document.getElementById("pedagio").value) || 0;
       const percentualDepreciacao = parseFloat(document.getElementById("percentual_depreciacao").value) || 0;
       
@@ -141,10 +154,8 @@
         </tr>
         <tr>
           <td>Tempo</td>
-          <td>
-            <input type="number" id="tempo" step="0.01" value="" oninput="calcularFrete()">
-          </td>
-          <td>Valor digitado pelo usuário</td>
+          <td>R$ <span id="tempo_display" title="Tempo = Motorista (Hora x Horas Trabalhadas)">0.00</span></td>
+          <td>Tempo = Motorista (Hora × Horas Trabalhadas)</td>
         </tr>
         <tr>
           <td>Pedágio</td>
@@ -217,6 +228,15 @@
           <label title="Seguro, Licença e IPVA = Valor / Dias">Total:</label>
           <input type="number" id="ipva" step="0.01" value="" readonly>
         </div>
+        <div class="box">
+          <h3>Motorista</h3>
+          <label for="motorista_hora" title="Informe o valor da hora do motorista">Hora (R$):</label>
+          <input type="number" id="motorista_hora" step="0.01" value="" oninput="atualizarResultadosConfig()">
+          <label for="motorista_horas" title="Informe o número de horas trabalhadas">Horas Trabalhadas:</label>
+          <input type="number" id="motorista_horas" step="0.01" value="" oninput="atualizarResultadosConfig()">
+          <label title="Motorista = Hora x Horas Trabalhadas">Total Motorista:</label>
+          <input type="number" id="motorista_total" step="0.01" value="" readonly>
+        </div>
       </div>
       <!-- Bloco Custos Fixos com mesmo padrão dos demais blocos -->
       <div class="custos-fixos-container">
@@ -233,7 +253,3 @@
   </main>
 </body>
 </html>
-
-
-
-
