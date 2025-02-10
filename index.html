@@ -125,46 +125,55 @@
         <tr>
           <th>Descrição</th>
           <th>Valor</th>
+          <th>Explicação</th>
         </tr>
         <tr>
           <td>KM Total</td>
           <td>
             <input type="number" id="km_total" step="0.01" value="" oninput="calcularFrete()">
           </td>
+          <td>Valor digitado pelo usuário</td>
         </tr>
         <tr>
           <td>Custo KM</td>
           <td>R$ <span id="custo_km" title="Custo KM = KM Total * (Combustível + Pneu + Troca de Óleo)">0.00</span></td>
+          <td>Custo KM = KM Total × (Combustível + Pneu + Troca de Óleo)</td>
         </tr>
         <tr>
           <td>Tempo</td>
           <td>
             <input type="number" id="tempo" step="0.01" value="" oninput="calcularFrete()">
           </td>
+          <td>Valor digitado pelo usuário</td>
         </tr>
         <tr>
           <td>Pedágio</td>
           <td>
             <input type="number" id="pedagio" step="0.01" value="" oninput="calcularFrete()">
           </td>
+          <td>Valor digitado pelo usuário</td>
         </tr>
         <tr>
           <td>Seguro</td>
           <td>R$ <span id="seguro_display" title="Seguro = (Seguro, Licença e IPVA) / Fretes no dia">0.00</span></td>
+          <td>Seguro = (Seguro, Licença e IPVA) ÷ (Fretes no dia)</td>
         </tr>
         <tr>
           <td>Percentual Depreciação (%)</td>
           <td>
             <input type="number" id="percentual_depreciacao" step="0.01" value="" oninput="calcularFrete()">
           </td>
+          <td>Valor digitado pelo usuário</td>
         </tr>
         <tr>
           <td>Depreciação</td>
           <td>R$ <span id="depreciacao" title="Depreciação = (Custo KM + Tempo + Pedágio) * (Percentual / 100)">0.00</span></td>
+          <td>Depreciação = (Custo KM + Tempo + Pedágio) × (Percentual ÷ 100)</td>
         </tr>
         <tr>
           <th>Custo Frete</th>
           <th>R$ <span id="total" title="Custo Frete = Custo KM + Tempo + Pedágio + Seguro + Depreciação">0.00</span></th>
+          <th>Custo Frete = Custo KM + Tempo + Pedágio + Seguro + Depreciação</th>
         </tr>
       </table>
     </section>
