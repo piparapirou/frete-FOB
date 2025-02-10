@@ -38,7 +38,7 @@
       let custosFixos = combustivel + pneu + trocaOleo;
       document.getElementById("resultado_custos_fixos").value = custosFixos.toFixed(2);
       
-      // Motorista = Hora * Horas Trabalhadas
+      // Bloco Motorista: Motorista = Hora * Horas Trabalhadas
       let motoristaHora = parseFloat(document.getElementById("motorista_hora").value) || 0;
       let motoristaHoras = parseFloat(document.getElementById("motorista_horas").value) || 0;
       let motoristaTotal = motoristaHora * motoristaHoras;
@@ -76,7 +76,7 @@
       const custoKM = kmTotal * custosFixos;
       document.getElementById("custo_km").textContent = custoKM.toFixed(2);
       
-      // Tempo = Valor armazenado do bloco Motorista (Hora x Horas Trabalhadas)
+      // Tempo = valor do bloco Motorista (Hora x Horas Trabalhadas)
       const tempo = parseFloat(localStorage.getItem("motorista_total")) || 0;
       document.getElementById("tempo_display").textContent = tempo.toFixed(2);
       
@@ -84,15 +84,15 @@
       const pedagio = parseFloat(document.getElementById("pedagio").value) || 0;
       const percentualDepreciacao = parseFloat(document.getElementById("percentual_depreciacao").value) || 0;
       
-      // Depreciação = (Custo KM + Tempo + Pedágio) × (Percentual / 100)
-      const depreciacao = (custoKM + tempo + pedagio) * (percentualDepreciacao / 100);
-      document.getElementById("depreciacao").textContent = depreciacao.toFixed(2);
-      
       // Seguro = (Valor configurado no bloco Seguro, Licença e IPVA) ÷ (Fretes no dia)
       const seguroConfig = parseFloat(localStorage.getItem("seguro")) || 0;
       const fretesDia = parseFloat(document.getElementById("fretes_dia").value) || 1;
       const seguroCalculated = seguroConfig / fretesDia;
       document.getElementById("seguro_display").textContent = seguroCalculated.toFixed(2);
+      
+      // Depreciação = (Custo KM + Tempo + Pedágio + Seguro) × (Percentual ÷ 100)
+      const depreciacao = (custoKM + tempo + pedagio + seguroCalculated) * (percentualDepreciacao / 100);
+      document.getElementById("depreciacao").textContent = depreciacao.toFixed(2);
       
       // Custo do Frete = Custo KM + Tempo + Pedágio + Seguro + Depreciação
       const custoFrete = custoKM + tempo + pedagio + seguroCalculated + depreciacao;
@@ -141,7 +141,7 @@
           <th>Explicação</th>
         </tr>
         <tr>
-          <td>KM Total</td>
+          <td>KM Total da Viagem</td>
           <td>
             <input type="number" id="km_total" step="0.01" value="" oninput="calcularFrete()">
           </td>
@@ -149,12 +149,12 @@
         </tr>
         <tr>
           <td>Custo KM</td>
-          <td>R$ <span id="custo_km" title="Custo KM = KM Total * (Combustível + Pneu + Troca de Óleo)">0.00</span></td>
-          <td>Custo KM = KM Total × (Combustível + Pneu + Troca de Óleo)</td>
+          <td>R$ <span id="custo_km" title="Custo KM = KM Total da Viagem × (Combustível + Pneu + Troca de Óleo)">0.00</span></td>
+          <td>Custo KM = KM Total da Viagem × (Combustível + Pneu + Troca de Óleo)</td>
         </tr>
         <tr>
           <td>Tempo</td>
-          <td>R$ <span id="tempo_display" title="Tempo = Motorista (Hora x Horas Trabalhadas)">0.00</span></td>
+          <td>R$ <span id="tempo_display" title="Tempo = Motorista (Hora × Horas Trabalhadas)">0.00</span></td>
           <td>Tempo = Motorista (Hora × Horas Trabalhadas)</td>
         </tr>
         <tr>
@@ -166,7 +166,7 @@
         </tr>
         <tr>
           <td>Seguro</td>
-          <td>R$ <span id="seguro_display" title="Seguro = (Seguro, Licença e IPVA) / Fretes no dia">0.00</span></td>
+          <td>R$ <span id="seguro_display" title="Seguro = (Seguro, Licença e IPVA) ÷ Fretes no dia">0.00</span></td>
           <td>Seguro = (Seguro, Licença e IPVA) ÷ (Fretes no dia)</td>
         </tr>
         <tr>
@@ -178,8 +178,8 @@
         </tr>
         <tr>
           <td>Depreciação</td>
-          <td>R$ <span id="depreciacao" title="Depreciação = (Custo KM + Tempo + Pedágio) * (Percentual / 100)">0.00</span></td>
-          <td>Depreciação = (Custo KM + Tempo + Pedágio) × (Percentual ÷ 100)</td>
+          <td>R$ <span id="depreciacao" title="Depreciação = (Custo KM + Tempo + Pedágio + Seguro) × (Percentual ÷ 100)">0.00</span></td>
+          <td>Depreciação = (Custo KM + Tempo + Pedágio + Seguro) × (Percentual ÷ 100)</td>
         </tr>
         <tr>
           <th>Custo Frete</th>
